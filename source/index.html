@@ -1,0 +1,45 @@
+<html>
+<head>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.11/OpenLayers.js" type="text/javascript"></script>
+
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="script/defi.js"></script>
+<script src="script/script.js"></script>
+<link  href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
+<style>
+#form_entite,
+#form_operateur,
+#form_referebce{
+	display:none;
+}
+
+/* masquer le bouton fermer*/
+#main .no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+</style>
+
+</head>
+<body>
+<div id="main">
+<h4>Sélection des entités sources</h4>
+<input id="btn_entite_source" type="button" value="Sélectionner la couche WFS">
+<h4>Où l'entité</h4>
+<input id="btn_operateur" type="button" value="Sélectionner l'opérateur">
+<h4>Sélection des entités de référence</h4>
+<input id="btn_entite_reference" type="button" value="Sélectionner la couche WFS">
+<input id="btn_afficher_resultat" type="button" value="Afficher le résultat">
+</div>
+<div id="carte"></div>
+<div id="dialog">
+
+</div>
+<div id="form_operateur_spatial">
+<select id="select_operateur_spatial" size="15"></select>
+<input type="button" value="OK" id="btn_operateur_ok">
+</div>
+<div id="form_entite_reference"></div>
+</body>
+</html>
