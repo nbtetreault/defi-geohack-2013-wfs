@@ -1,0 +1,3 @@
+function Couches(){
+	this.items = [];
+}

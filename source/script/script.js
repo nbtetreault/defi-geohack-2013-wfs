@@ -1,16 +1,19 @@
+ï»¿var defi = new Defi();
+
 $(document).ready(function(){
 	init();
 });
+
 function init(){
 	$("#main").dialog({
-						"title":"Requête spatiale",
+						"title":"RequÃªte spatiale",
 						"position": "left top"
 						});
 	
 	$("#btn_entite_source").on("click", function(){
 		
 		$("#dialog").dialogEntite({
-			title:"Entité source",
+			title:"EntitÃ© source",
 			entite:defi.entiteSource,
 			width:800
 		});
@@ -19,10 +22,10 @@ function init(){
 	
 	$("#btn_operateur").on("click", function(){
 		$("#form_operateur").dialog({
-			"title": "Choix de l'opérateur",
+			"title": "Choix de l'opÃ©rateur",
 			"modal":true
 		});
-		var operateurs = 
+	
 		
 		$.each(defi.OPERATEURS__, function(index, valeur){
 			$("#select_operateur").append('<option value="'+valeur+'">'+valeur+'</option>');
@@ -45,5 +48,6 @@ function init(){
 						"title": "Carte OpenLayers",
 						"position": "top"
 						});
+	
 	
 }

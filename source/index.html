@@ -1,17 +1,31 @@
-<html>
+ï»¿<html>
 <head>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.11/OpenLayers.js" type="text/javascript"></script>
 
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<script src="script/defi.js"></script>
+
+
+<!-- Classes utilitaires -->
+<script src="script/WFS.js"></script>
+<script src="script/ListeWFS.js"></script>
+<script src="script/Couche.js"></script>
+<script src="script/Attribut.js"></script>
+<script src="script/Operateur.js"></script>
+<script src="script/Valeur.js"></script>
+<script src="script/Entite.js"></script>
+<script src="script/DialogEntite.js"></script>
+<script src="script/Helper.js"></script>
+
+<script src="script/Defi.js"></script>
 <script src="script/script.js"></script>
+
+
 <link  href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <style>
 #form_entite,
-#form_operateur,
-#form_referebce{
+#form_operateur_spatial{
 	display:none;
 }
 
@@ -24,13 +38,13 @@
 </head>
 <body>
 <div id="main">
-<h4>Sélection des entités sources</h4>
-<input id="btn_entite_source" type="button" value="Sélectionner la couche WFS">
-<h4>Où l'entité</h4>
-<input id="btn_operateur" type="button" value="Sélectionner l'opérateur">
-<h4>Sélection des entités de référence</h4>
-<input id="btn_entite_reference" type="button" value="Sélectionner la couche WFS">
-<input id="btn_afficher_resultat" type="button" value="Afficher le résultat">
+<h4>SÃ©lection des entitÃ©s sources</h4>
+<input id="btn_entite_source" type="button" value="SÃ©lectionner la couche WFS">
+<h4>OÃ¹ l'entitÃ©</h4>
+<input id="btn_operateur" type="button" value="SÃ©lectionner l'opÃ©rateur">
+<h4>SÃ©lection des entitÃ©s de rÃ©fÃ©rence</h4>
+<input id="btn_entite_reference" type="button" value="SÃ©lectionner la couche WFS">
+<input id="btn_afficher_resultat" type="button" value="Afficher le rÃ©sultat">
 </div>
 <div id="carte"></div>
 <div id="dialog">
