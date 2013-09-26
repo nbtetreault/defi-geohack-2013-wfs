@@ -11,7 +11,7 @@ function init(){
 		
 		$("#dialog").dialogEntite({
 			title:"Entité source",
-			entite:defi.entite_source,
+			entite:defi.entiteSource,
 			width:800
 		});
 		
@@ -22,20 +22,9 @@ function init(){
 			"title": "Choix de l'opérateur",
 			"modal":true
 		});
-		var operateurs = [
-			"equals",
-			"disjoint",
-			"touches",
-			"within",
-			"overlaps",
-			"crosses",
-			"intersect",
-			"contains",
-			"dwitin",
-			"bbox"
-		];
+		var operateurs = 
 		
-		$.each(operateurs, function(index, valeur){
+		$.each(defi.OPERATEURS__, function(index, valeur){
 			$("#select_operateur").append('<option value="'+valeur+'">'+valeur+'</option>');
 		});
 		

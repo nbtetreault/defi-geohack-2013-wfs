@@ -1,20 +1,41 @@
-var defi = new Object();
-
-defi.entites_sources = new Array();
-defi.entite_source = null;
+var defi = {};
+//defi.entites_sources = new Array();
+defi.entiteSource = {};
+defi.entiteSource.valeur = '';
 defi.operateur = null;
-defi.entites_references = new Array();
-defi.entite_reference = null;
+//defi.entites_references = new Array();
+defi.entiteReference = {};
+defi.entiteReference.valeur = {};
+defi.OPERATEURS = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like", "AND", "OR"];
+defi.OPERATEURS__ = [
+    "equals",
+    "disjoint",
+    "touches",
+    "within",
+    "overlaps",
+    "crosses",
+    "intersect",
+    "contains",
+    "dwitin",
+    "bbox"
+];
+defi.dialog = null;
 
 (function( $, undefined ) {
 
 	$.widget("defi.dialogEntite", $.ui.dialog,{
-	
-		_create: function(){
+        
+        
+        options: {
+            entite: {}
+        },
+
+		_create: function(param1, param2, param3){
 			this._super();
 			var dialog = this.uiDialog;
-			
-			this._entite = this.options.entite;
+			defi.dialog = this;
+	//		this._entite = this.options.entite;
+            this.CLASS_NAME = 'dialogEntite';
 
 			dialog.append('<select id="wfs"><option value="">Choisir un WFS</option></select><br>'
 						  + '<select disabled id="couche"><option value="">Sélectionner une couche</option></select><br>'
@@ -31,18 +52,17 @@ defi.entite_reference = null;
 						  );
 						  
 			
-			this._charger_liste_wfs('');
+			this._chargerListeWfs('');
 			
-			var operateurs = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like", "AND", "OR"];
 			
 			//On a un WFS courant
 			if(false){
 				//Afficher les couches disponibles
-				this._charger_liste_couches();
+				this._chargerListeCoches();
 			}
 			
 			//Ajouter la liste des opérateurs
-			$.each(operateurs, function(index, valeur){
+			$.each(defi.OPERATEURS, function(index, valeur){
 				$("#operateurs").append('<option value="'+valeur+'">'+valeur+'</option>');
 			});
 			
@@ -54,10 +74,13 @@ defi.entite_reference = null;
 				//Afficher les valeurs et cocher la courante si applicable
 			}	
 			
-			$("#wfs").change(function(){
-				alert("wfs on change ...");
+			$("#wfs").change(function(param1, param2, param3){
+				
 				//Appeler le WFS et récupérer la liste des couches
-				//TODO écrire une fonction qui chage les couches dans la liste et la réutiliser lors de l'affichage initial si on en avait déjà 
+                var wfs = $( "#wfs option:selected" ).val();
+                var couches = defi.dialog._getCouches(wfs);
+                var coucheCourante = defi.dialog.getEntiteValeur();
+				defi.dialog._chargerListeCouches(couches, coucheCourante);
 			});
 			
 			$("#couche").change(function(){
@@ -80,8 +103,15 @@ defi.entite_reference = null;
 			this._super();
 			this.destroy();
 		},
+        
+        getEntiteValeur:function(){
+            if(this._entite.valeur){
+                return this._entite.valeur;
+            }
+            return '';
+        },
 		
-		_charger_liste_wfs: function(wfs_courant){
+		_chargerListeWfs: function(wfsCourant){
 		
 			//Ajouter les WFS 
 			var liste_wfs = [
@@ -98,19 +128,24 @@ defi.entite_reference = null;
 			$.each(liste_wfs, function(index, wfs){
 			
 				//TODO Sélectionner l'option si elle correspond à l'option courante de l'entité
-				var selected = (wfs_courant == wfs.nom) ? 'selected' : '';
+				var selected = (wfsCourant == wfs.nom) ? 'selected' : '';
 				$("#wfs").append('<option value="'+wfs.valeur+'" '+selected+'>'+wfs.nom+'</option>');
 			});
 		},
-		_charger_liste_couches: function(couche_courante){
+		_chargerListeCoches: function(liste, coucheCourante){
 			
 		},
-		_charger_liste_attributs:function(attribut_courant){
+		_chargerListeAttributs:function(attributCourant){
 		
 		},
-		_charger_liste_valeurs:function(valeur_courante){
+		_chargerListeValeurs:function(valeurCourante){
 		
-		}
+		},
+        //Récupère des couches à partir d'un url de WFS
+        _getCouches: function(wfs){
+            //TODO Appeler l'url des wfs
+            return ["un", "deux", "trois"];
+        }
 	});
 
 })( jQuery );
