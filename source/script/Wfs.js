@@ -3,20 +3,27 @@
 	this.titre = titre;
 	this.url = url;
 	this.version = version;
-	this.couches = [];
+	this.couches = new Couches(); //<Couches>
 } 
+
+/*
+* Construit l'url à appeler pour faire un GetCapabilities
+*/
+WFS.prototype.urlGetCapabilities = function(){
+	return this.url + "&VERSION=" + this.version + "&SERVICE=WFS&REQUEST=GetCapabilities";
+}
 
 /*
 * Récupère la liste des couches et les stocke
 */
 WFS.prototype.charger = function(){
 
-	//Supprimer les vieilles couches
-	this.couches = [];
+	//Initialiser la liste des couches
+	this.couches.vider();
 	
 	//Appel ajax qui récupère la liste des couches
 	var request = OpenLayers.Request.GET({	
-		url: 'proxy.php?url=' + encodeURIComponent(this.url), //+ "&dc"+new Date().getTime(),
+		url: 'proxy.php?url=' + encodeURIComponent(this.urlGetCapabilities()),
 		async:false,
 		success: function(response){
 
@@ -49,7 +56,7 @@ WFS.prototype.charger = function(){
 				}
 				
 				
-				this.ajouterCouche(name, title, srs);
+				this.ajouterCouche(name, title, srs, this);
 			}
 		},
 		failure: function(){ alert('ca a pas marché');},
@@ -57,7 +64,10 @@ WFS.prototype.charger = function(){
 	});
 }
 
-WFS.prototype.ajouterCouche = function(nom, titre, srs){
-	var couche = new Couche(nom, titre, srs);
-	this.couches.push(couche);
+/*
+* Ajoute une couche à la liste des couches du WFS
+*/
+WFS.prototype.ajouterCouche = function(nom, titre, srs, WFS){
+	var couche = new Couche(nom, titre, srs, WFS);
+	this.couches.ajouter(couche);
 }

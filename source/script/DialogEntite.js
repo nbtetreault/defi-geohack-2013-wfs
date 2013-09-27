@@ -1,7 +1,11 @@
-﻿(function( $, undefined ) {
+﻿/*
+* Inspiré de https://github.com/jquery-boilerplate/boilerplate/
+
+* TODO Stocker les informations d'entités dans le dialog. Quand on Enregistre, stocker ça dans defi.entiteSource ou defi.entiteReference
+*/
+(function( $, undefined ) {
 
 	$.widget("defi.dialogEntite", $.ui.dialog,{
-        
         
         options: {
             entite: {}
@@ -16,11 +20,11 @@
 			dialog.append('<select id="WFS"><option value="">Choisir un WFS</option></select><br>'
 						  + '<select disabled id="couche"><option value="">Sélectionner une couche</option></select><br>'
 						  + '<table><tr><td>Attributs de la couche<br>'
-						  + '<select id="attributs" size="10"></select>'
+						  + '<select id="attribut" size="10"></select>'
 						  + '</td><td>Opérateur<br>'
-						  + '<select id="operateurs" size="10"></select>'
+						  + '<select id="operateur" size="10"></select>'
 						  + '</td><td>Valeurs disponibles<br>'
-						  + '<select id="valeurs" size="10"></select>'
+						  + '<select id="valeur" size="10"></select>'
 						  + '</td><td>Condition<br>'
 						  + '<input type="text" id="condition" readonly>'
 						  + '</td></tr></table>'
@@ -29,14 +33,14 @@
 						  
 			
 			//Remplir la liste des WFS
-			$.each(defi.listeWFS.items, function(index, WFS){
+			$.each(defi.WFSS.items, function(index, WFS){
 				$("#WFS").append('<option value="'+WFS.nom+'">'+WFS.nom+'</option>');
 			});
 			
 				
 			//Remplir la liste des opérateurs
 			$.each(defi.OPERATEURS, function(index, valeur){
-				$("#operateurs").append('<option value="'+valeur+'">'+valeur+'</option>');
+				$("#operateur").append('<option value="'+valeur+'">'+valeur+'</option>');
 			});
 			
 			
@@ -54,13 +58,8 @@
 				//stocké pour ne pas avoir à réinterroger le WFS
 				
 			}
-			
-			
-	
 
-		
-			
-			$("#WFS").change(function(){
+			$("#WFS").change($.proxy(function(){
 				
 				//Appeler le WFS et récupérer la liste des couches
 				var valeur = $( "#WFS option:selected" ).val();
@@ -69,22 +68,21 @@
 					//Vider la liste
 					$("#couche").html('<option value="">Sélectionner une couche</option>');
 					
-					var WFS = defi.listeWFS.getWFSParNom(valeur);
+					var WFS = defi.WFSS.getWFSParNom(valeur);
 					if(WFS){
 						
-						//TODO Stocker une référence au WFS de cette entité dans defi, soit pour source ou référence 
-						
+						this.options.entite.WFS = WFS;
 						
 						//Maj des couches du wfs
 						WFS.charger();
 						
-						if(WFS.couches.length > 0){
+						if(WFS.couches.length() > 0){
 							$("#couche").removeAttr("disabled");
 						}else{
 							$("#couche").attr("disabled", "disabled");
 						}
 						//Maj de la liste des couches
-						$.each(WFS.couches, function(index, valeur){
+						$.each(WFS.couches.items, function(index, valeur){
 							$("#couche").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
 						});
 						
@@ -97,37 +95,56 @@
 					$("#couche").attr("disabled", "disabled");
 				}
                 
-			});
+			}, this));
 			
-			$("#couche").change(function(){
+			$("#couche").change($.proxy(function(){
 				
-				//Vider la liste des attributs et des valeurs disponibles
+				//Vider la liste des attributs
 				$("#attributs").html("");
-				$("#valeurs").html("");
 				
+				var valeur = $("#couche option:selected").val();
 				
 				//Récupérer une référence vers la couche
-				//var couche = defi.listeWFS.getWFSParNom(valeur);
+				var couche = this.options.entite.WFS.couches.getCoucheParNom(valeur);
 				
 				if(couche){
+				
+					this.options.entite.couche = couche;
+				
 					//Maj des couches du wfs
 					couche.charger();
 					
+					//Vider la liste
+					$(attribut).html('');
 					
-					//Maj de la liste des couches
+					//Maj de la liste des attributs de la couche
 					$.each(couche.attributs, function(index, valeur){
 						$("#attribut").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
 					});
 					
-					$.each(valeur.valeurs, function(index, valeur){
-						$("#couche").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
+/*				
+				$.each(valeur.valeurs, function(index, valeur){
+						$("#valeur").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
 					});
+					*/
 					
 				}else{
 					alert("la couche n'a pas été trouvé");
 				}
 				
-			});
+			}, this));
+			
+			$("#attribut").change($.proxy(function(){
+				
+				$("#valeur").html("");
+				
+				//Remplir la liste des valeurs en fonction de l'attribut
+				var nomAttribut = $("#atribut option:selected").val();
+				if(nomAttribut){
+					var attribut = this.options.entite.couche.
+				}
+			
+			}, this));
 			
 			$("#enregistrer_condition").on("click", function(){
 				alert("ajouter la condition click");
