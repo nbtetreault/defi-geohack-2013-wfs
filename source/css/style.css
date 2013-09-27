@@ -2,8 +2,3 @@
 #form_operateur_spatial{
 	display:none;
 }
-
-/* masquer le bouton fermer*/
-#main .no-close .ui-dialog-titlebar-close {
-  display: none;
-}

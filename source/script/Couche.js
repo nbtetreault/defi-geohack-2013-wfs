@@ -2,7 +2,7 @@
 	this.nom = nom;
 	this.titre = titre;
 	this.srs = srs;
-	this.attributs = []; //array de <Attribut>
+	this.attributs = new Attributs(); //array de <Attribut>
 	this.WFS = WFS;
 }
 
@@ -25,15 +25,19 @@ Couche.prototype.urlGetFeature = function(){
 */
 Couche.prototype.charger = function(){
 
+	//Supprimer les vieilles informations sur les attributs
+	this.attributs.vider();
+	
 	this.chargerAttributs();
 	this.chargerValeurs();
 
 }
 
+/*
+* Télécharge la liste des attributs de la couche
+*/
 Couche.prototype.chargerAttributs = function (){
 
-	//Supprimer les vieilles informations
-	this.attributs.vider();
 	
 	//Appel ajax qui récupère la liste des couches
 	var request = OpenLayers.Request.GET({	
@@ -48,7 +52,7 @@ Couche.prototype.chargerAttributs = function (){
 			xmlItems = xmlItems[0].children;
 			
 			//Parcourir la liste des attributs
-			for(var i=0; i< xmlItems.length-1; i++){
+			for(var i=0; i< xmlItems.length; i++){
 				
 				var element = xmlItems[i];
 				var name = '';
@@ -69,13 +73,12 @@ Couche.prototype.chargerAttributs = function (){
 					}
 				}
 				
-				
-				
-				//TODO récupérer les informations pour faire l'ajout.
 				this.attributs.ajouter(new Attribut(name, type));
-		//		this.ajouterValeur();
 			
 			}
+			
+			//Trier les attributs pour affichage
+			this.attributs.trier();
 				
 		},
 		failure: function(){ alert('ca a pas marché');},
@@ -83,11 +86,10 @@ Couche.prototype.chargerAttributs = function (){
 	});
 }
 
+/**
+* Télécharge la liste des valeurs d'attibuts possibles de la couche
+*/
 Couche.prototype.chargerValeurs = function (){
-	return;
-	
-	//Supprimer les vieilles informations
-	this.valeurs = [];
 	
 	//Appel ajax qui récupère la liste des couches
 	var request = OpenLayers.Request.GET({	
@@ -98,38 +100,34 @@ Couche.prototype.chargerValeurs = function (){
 			var format = new OpenLayers.Format.XML();
 			xml = format.read(response.responseText);
 
-			var xmlItems = format.getElementsByTagNameNS(xml, "*", "sequence");
-			xmlItems = xmlItems[0].children;
+			var xmlItems = format.getElementsByTagNameNS(xml, "*", this.nom)
 			
-			//Parcourir la liste des attributs
-			for(var i=0; i< xmlItems.length-1; i++){
+			//Parcourir la liste des features
+			for(var i=0; i< xmlItems.length; i++){
+							
+				var childrens = xmlItems[i].children;
 				
-				var element = xmlItems[i];
-				var name = '';
-				var type = '';
-				
-				//Parcourir les informations d'attributs
-				for(var ii = 0; ii< element.attributes.length;ii++){
-					var attribut = element.attributes[ii];
-					switch(attribut.nodeName){
-						case "name":
-							name = attribut.textContent;
-							break;
-						case "type":
-							type = attribut.textContent;
-							break;
-						default:
-							break;
+				//Parcourir la liste des attributs
+				for(var ii = 0; ii < childrens.length; ii++){
+					var children = childrens[ii];
+					
+					nomAttribut = children.nodeName;
+					
+					//Enlever le : et ce qui précède. Semble inutile.
+					nomAttribut = nomAttribut.slice(nomAttribut.indexOf(":")+1, nomAttribut.length);
+					
+					valeurAttribut = children.textContent;
+					valeurAttribut = valeurAttribut.trim();
+					if(valeurAttribut.length > 0){
+						this.attributs.ajouterValeurPossible(nomAttribut, valeurAttribut);
 					}
+					
+				
 				}
-				
-				
-				
-				//TODO récupérer les informations pour faire l'ajout.
-				this.ajouterAttribut(name, type);
-		//		this.ajouterValeur();
-			
 			}
+			
+			//Trier les valeurs d'attributs
+			this.attributs.trierValeurs();
 				
 		},
 		failure: function(){ alert('ca a pas marché');},
@@ -139,7 +137,7 @@ Couche.prototype.chargerValeurs = function (){
 
 Couche.prototype.ajouterAttribut = function(nom, type){
 	var attribut = new Attribut(nom, type);
-	this.attributs.push(attribut);
+	this.attributs.ajouter(attribut);
 }
 
 Couche.prototype.ajouterValeur = function(valeur){

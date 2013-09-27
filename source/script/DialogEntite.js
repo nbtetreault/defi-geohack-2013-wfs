@@ -2,6 +2,7 @@
 * Inspiré de https://github.com/jquery-boilerplate/boilerplate/
 
 * TODO Stocker les informations d'entités dans le dialog. Quand on Enregistre, stocker ça dans defi.entiteSource ou defi.entiteReference
+//TODO Mettre un "veuillez patienter" quand on fait du ajax
 */
 (function( $, undefined ) {
 
@@ -17,17 +18,17 @@
 			defi.dialog = this;
             this.CLASS_NAME = 'dialogEntite';
 
-			dialog.append('<select id="WFS"><option value="">Choisir un WFS</option></select><br>'
-						  + '<select disabled id="couche"><option value="">Sélectionner une couche</option></select><br>'
-						  + '<table><tr><td>Attributs de la couche<br>'
+			dialog.append('<b>WFS</b><br><select id="WFS"><option value="">Choisir un WFS</option></select><br>'
+						  + '<b>Couche</b><br><select disabled id="couche"><option value="">Sélectionner une couche</option></select><br>'
+						  + '<b>Critères</b><br><table><tr><td>Attributs de la couche<br>'
 						  + '<select id="attribut" size="10"></select>'
 						  + '</td><td>Opérateur<br>'
 						  + '<select id="operateur" size="10"></select>'
 						  + '</td><td>Valeurs disponibles<br>'
 						  + '<select id="valeur" size="10"></select>'
-						  + '</td><td>Condition<br>'
-						  + '<input type="text" id="condition" readonly>'
 						  + '</td></tr></table>'
+						  + '<b>Condition</b><br>'
+						  + '<p id="condition">&nbsp;</p>'
 						  + '<input type="button" value="Enregistrer la condition" id="enregistrer_condition">'
 						  );
 						  
@@ -100,37 +101,38 @@
 			$("#couche").change($.proxy(function(){
 				
 				//Vider la liste des attributs
-				$("#attributs").html("");
+				$("#attribut").html("");
 				
 				var valeur = $("#couche option:selected").val();
-				
-				//Récupérer une référence vers la couche
-				var couche = this.options.entite.WFS.couches.getCoucheParNom(valeur);
-				
-				if(couche){
-				
-					this.options.entite.couche = couche;
-				
-					//Maj des couches du wfs
-					couche.charger();
+				if(valeur){
+					//Récupérer une référence vers la couche
+					var couche = this.options.entite.WFS.couches.getCoucheParNom(valeur);
 					
-					//Vider la liste
-					$(attribut).html('');
+					if(couche){
 					
-					//Maj de la liste des attributs de la couche
-					$.each(couche.attributs, function(index, valeur){
-						$("#attribut").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
-					});
+						this.options.entite.couche = couche;
 					
-/*				
-				$.each(valeur.valeurs, function(index, valeur){
-						$("#valeur").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
-					});
-					*/
-					
+						//Maj des couches du wfs
+						couche.charger();
+						
+						//Vider la liste
+						$(attribut).html('');
+						
+						//Maj de la liste des attributs de la couche
+						$.each(couche.attributs.items, function(index, valeur){
+							$("#attribut").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
+						});
+						
+					}else{
+						alert("la couche n'a pas été trouvé");
+					}
 				}else{
-					alert("la couche n'a pas été trouvé");
+					
+					$("#valeur").html("");
+					
 				}
+				
+				this.majCondition();
 				
 			}, this));
 			
@@ -138,13 +140,32 @@
 				
 				$("#valeur").html("");
 				
-				//Remplir la liste des valeurs en fonction de l'attribut
-				var nomAttribut = $("#atribut option:selected").val();
+				
+				var nomAttribut = $("#attribut option:selected").val();
 				if(nomAttribut){
-					var attribut = this.options.entite.couche.
+					
+					var attribut = this.options.entite.couche.attributs.getAttributParNom(nomAttribut);
+					if(attribut){
+						//Remplir la liste des valeurs en fonction de l'attribut sélectionné
+						$.each(attribut.valeursPossibles.items, function(index, valeur){
+							$("#valeur").append('<option value="'+valeur.valeur+'">'+valeur.valeur+'</option>');
+						});
+					}
 				}
+				
+				this.majCondition();
 			
 			}, this));
+			
+						
+			$("#operateur").change($.proxy(function(){
+				this.majCondition();
+			},this));
+			
+						
+			$("#valeur").change($.proxy(function(){
+				this.majCondition();
+			},this));
 			
 			$("#enregistrer_condition").on("click", function(){
 				alert("ajouter la condition click");
@@ -153,6 +174,17 @@
 			
 			
 			
+		},
+		majCondition:function (){
+			var attribut = $("#attribut").val();
+			var operateur = $("#operateur").val();
+			var valeur = $("#valeur").val();
+			
+			if(attribut && operateur && valeur){
+				$("#condition").html(attribut + operateur + valeur);
+			}else{
+				$("#condition").html('&nbsp;');
+			}
 		},
 		open: function(){
 			this._super();

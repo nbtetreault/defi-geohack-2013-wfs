@@ -32,13 +32,13 @@ WFS.prototype.charger = function(){
 
 			//Liste des couches
 			var xmlCouches = format.getElementsByTagNameNS(xml, "*", "FeatureType");
-			for(var i=0; i< xmlCouches.length-1; i++){
+			for(var i=0; i< xmlCouches.length; i++){
 				
 				var couche = xmlCouches[i].children;
 				var name = '';
 				var title = '';
 				var srs = '';
-				for(var ii=0; ii<couche.length-1; ii++){
+				for(var ii=0; ii < couche.length; ii++){
 					var node = couche[ii];
 					switch(node.nodeName){
 						case "Name":

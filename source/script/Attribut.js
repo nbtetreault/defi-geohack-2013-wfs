@@ -1,6 +1,5 @@
 ﻿function Attribut(nom, type){
 	this.nom = nom; //string
 	this.type = type; //string
-	this.valeursPossibles = new Attributs(); //<Attributs>
+	this.valeursPossibles = new Valeurs(); //<Valeurs>
 }
-

@@ -5,18 +5,19 @@ $(document).ready(function(){
 });
 
 function init(){
-	$("#main").dialog({
-						"title":"Requête spatiale",
-						"position": "left top"
-						});
 	
+	
+
 	$("#btn_entite_source").on("click", function(){
-		
+	
+	
 		$("#dialog").dialogEntite({
 			title:"Entité source",
 			entite:defi.entiteSource,
-			width:800
+			width:800,
+			modal:true
 		});
+		
 		
 	});
 	
@@ -40,14 +41,19 @@ function init(){
 	
 	
 	$("#btn_entite_reference").on("click", function(){
-	
+		$("#dialog").dialogEntite({
+			title:"Entité référence",
+			entite:defi.entiteReference,
+			width:800,
+			modal:true
+		});
 	});
 	
 	
 	$("#carte").dialog({
-						"title": "Carte OpenLayers",
-						"position": "top"
+						"title": "Carte OpenLayers"
+			
 						});
 	
-	
+
 }

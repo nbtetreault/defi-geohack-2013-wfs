@@ -10,7 +10,7 @@ Couches.prototype.length = function(){
 	return this.items.length;
 }
 
-Couches.prototype.vider=function(){
+Couches.prototype.vider = function(){
 	this.items = [];
 }
 
