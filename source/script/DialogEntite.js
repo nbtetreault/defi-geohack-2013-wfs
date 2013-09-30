@@ -1,7 +1,6 @@
 ﻿/*
 * Inspiré de https://github.com/jquery-boilerplate/boilerplate/
 
-* TODO Stocker les informations d'entités dans le dialog. Quand on Enregistre, stocker ça dans defi.entiteSource ou defi.entiteReference
 //TODO Mettre un "veuillez patienter" quand on fait du ajax
 */
 (function( $, undefined ) {
@@ -18,6 +17,9 @@
 			defi.dialog = this;
             this.CLASS_NAME = 'dialogEntite';
 
+			//Faire une copie de l'entité. Ne pas modifier l'originale
+			this.entiteTempo = jQuery.extend({}, this.options.entite);
+
 			dialog.append('<b>WFS</b><br><select id="WFS"><option value="">Choisir un WFS</option></select><br>'
 						  + '<b>Couche</b><br><select disabled id="couche"><option value="">Sélectionner une couche</option></select><br>'
 						  + '<b>Critères</b><br><table><tr><td>Attributs de la couche<br>'
@@ -30,26 +32,22 @@
 						  + '<b>Condition</b><br>'
 						  + '<p id="condition">&nbsp;</p>'
 						  + '<input type="button" value="Enregistrer la condition" id="enregistrer_condition">'
-						  );
-						  
+				);	  
 			
-			//Remplir la liste des WFS
-			$.each(defi.WFSS.items, function(index, WFS){
-				$("#WFS").append('<option value="'+WFS.nom+'">'+WFS.nom+'</option>');
-			});
 			
+			var WFSCourant = (this.entiteTempo.attribut) ? this.entiteTempo.attribut.nom : '';
+			this.majListeWFS(defi.WFSS.items, '');
 				
 			//Remplir la liste des opérateurs
 			$.each(defi.OPERATEURS, function(index, valeur){
 				$("#operateur").append('<option value="'+valeur+'">'+valeur+'</option>');
 			});
 			
-			
 			//On a déjà définie l'entitée
-			if(false){
+			if(this.entiteTempo.getCondition()){
 				
 				//Remplir la liste des couches
-				
+				this.majListeCouches();
 				
 				//Remplir la liste des attributs de couche
 				//stocké pour ne pas avoir à réinterroger le WFS
@@ -59,36 +57,45 @@
 				//stocké pour ne pas avoir à réinterroger le WFS
 				
 			}
-
+		
 			$("#WFS").change($.proxy(function(){
 				
-				//Appeler le WFS et récupérer la liste des couches
-				var valeur = $( "#WFS option:selected" ).val();
+				
+				var valeur = $("#WFS option:selected").val();
+				
+				//Un WFS est sélectionné
 				if(valeur){
 				
-					//Vider la liste
-					$("#couche").html('<option value="">Sélectionner une couche</option>');
+					//Vider la liste des couches
+					this.viderListeCouches();
+					
+					this.viderListeAttributs();
+					this.viderListeValeurs();
 					
 					var WFS = defi.WFSS.getWFSParNom(valeur);
 					if(WFS){
 						
-						this.options.entite.WFS = WFS;
+						this.entiteTempo.WFS = WFS;
 						
-						//Maj des couches du wfs
+						//Demander une maj des couches du WFS
 						WFS.charger();
 						
+						//Au moins une couche pour le WFS
 						if(WFS.couches.length() > 0){
+						
+							//Activer le contrôle de sélection des couches
 							$("#couche").removeAttr("disabled");
+							
+							this.majListeCouches(WFS.couches.items, '');
 						}else{
+						
+							//Désactiver le contrôle de sélection des couches
 							$("#couche").attr("disabled", "disabled");
 						}
-						//Maj de la liste des couches
-						$.each(WFS.couches.items, function(index, valeur){
-							$("#couche").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
-						});
 						
+
 					}else{
-						alert("le wfs n'a pas été trouvé");
+						alert("Le wfs n'a pas été trouvé");
 					}
 					
 				}else{
@@ -98,19 +105,23 @@
                 
 			}, this));
 			
+			//Sélection d'une couche
 			$("#couche").change($.proxy(function(){
 				
-				//Vider la liste des attributs
-				$("#attribut").html("");
+				//Vider la liste des attributs de couche
+				this.viderListeAttributs();
 				
+				this.viderListeValeurs();
+
 				var valeur = $("#couche option:selected").val();
+				
+				//Une couche est sélectionnée
 				if(valeur){
-					//Récupérer une référence vers la couche
-					var couche = this.options.entite.WFS.couches.getCoucheParNom(valeur);
-					
+				
+					var couche = this.entiteTempo.WFS.couches.getCoucheParNom(valeur);	
 					if(couche){
 					
-						this.options.entite.couche = couche;
+						this.entiteTempo.couche = couche;
 					
 						//Maj des couches du wfs
 						couche.charger();
@@ -119,17 +130,12 @@
 						$(attribut).html('');
 						
 						//Maj de la liste des attributs de la couche
-						$.each(couche.attributs.items, function(index, valeur){
-							$("#attribut").append('<option value="'+valeur.nom+'">'+valeur.nom+'</option>');
-						});
+						this.majListeAttributs(couche.attributs.items)
+						
 						
 					}else{
-						alert("la couche n'a pas été trouvé");
+						alert("La couche n'a pas été trouvée.");
 					}
-				}else{
-					
-					$("#valeur").html("");
-					
 				}
 				
 				this.majCondition();
@@ -138,39 +144,60 @@
 			
 			$("#attribut").change($.proxy(function(){
 				
-				$("#valeur").html("");
-				
+				this.viderListeValeurs();
 				
 				var nomAttribut = $("#attribut option:selected").val();
+				
+				//Un attribut est sélectionné
 				if(nomAttribut){
 					
-					var attribut = this.options.entite.couche.attributs.getAttributParNom(nomAttribut);
+					var attribut = this.entiteTempo.couche.attributs.getAttributParNom(nomAttribut);
 					if(attribut){
+					
+						this.entiteTempo.attribut = attribut;
+
 						//Remplir la liste des valeurs en fonction de l'attribut sélectionné
-						$.each(attribut.valeursPossibles.items, function(index, valeur){
-							$("#valeur").append('<option value="'+valeur.valeur+'">'+valeur.valeur+'</option>');
-						});
+						this.majListeValeurs(attribut.valeursPossibles.items, '');
 					}
 				}
 				
 				this.majCondition();
 			
 			}, this));
-			
-						
+
+
 			$("#operateur").change($.proxy(function(){
+
+				var operateur = $("operateur option:selected").val();
+				if(operateur){
+					operateur = new Operateur(operateur);
+					this.entiteTempo.operateur = operateur;
+				}else{
+					this.entiteTempo.operateur = null
+				}
+
 				this.majCondition();
 			},this));
-			
-						
+	
 			$("#valeur").change($.proxy(function(){
+
+				var valeur = $("valeur option:selected").val();
+				if(valeur){
+					valeur = new Valeur(valeur);
+					this.entiteTempo.valeur = valeur;
+				}else{
+					this.entiteTempo.operateur = null;
+				}
+
 				this.majCondition();
 			},this));
 			
 			$("#enregistrer_condition").click($.proxy(function(){
 			
-				if(this.conditionValide()){
-					var toto = tutu;
+				if(this.entiteTempo.conditionValide()){
+
+					this.options.entite = this.entiteTempo;
+					this.close();
 				}else{
 					alert("Veuillez sélectionner les options nécessaires");
 				}
@@ -178,15 +205,9 @@
 			}, this));
 
 		},
-		conditionValide:function (){
-			var attribut = $("#attribut").val();
-			var operateur = $("#operateur").val();
-			var valeur = $("#valeur").val();
-			return (attribut && operateur && valeur);
-		},
 		majCondition:function (){
 
-			if(this.conditionValide()){
+			if(this.entiteTempo.conditionValide()){
 				var attribut = $("#attribut").val();
 				var operateur = $("#operateur").val();
 				var valeur = $("#valeur").val();
@@ -203,7 +224,57 @@
 		close: function(){
 			this._super();
 			this.destroy();
+		},
+		viderListeCouches: function (){
+			//Vider la liste des couches
+			$("#couche").html('<option value="">Sélectionner une couche</option>');
+		},
+		viderListeAttributs: function(){
+			$("#attribut").html("");
+		},
+		viderListeValeurs: function(){
+			$("#valeur").html("");
+		},
+		majListeWFS: function(WFSS, WFSCourant){
+			
+			$.each(defi.WFSS.items, function(index, WFS){
+				var selected = (WFS.nom == WFSCourant) ? "selected" : "";
+				$("#WFS").append('<option value="'+WFS.nom+'">'+WFS.nom+'</option>');
+			});
+		},
+		/**
+		* Rempli l'outil de sélection de la couche
+		* @param array couches Array de <Couche>
+		* @param <Couche> courante
+		*/
+		majListeCouches: function (couches, coucheCourante){
+		
+			$.each(couches, function(index, couche){
+				var selected = (couche.nom == coucheCourante) ? "selected" : "";
+				$("#couche").append('<option value="'+couche.nom+'" "'+selected+'">'+couche.nom+'</option>');
+			});
+		},
+		/**
+		* Rempli l'outil de sélection de l'attribut
+		* @param array attributs Array de <Attribut>
+		* @param <Attribut> courant
+		*/
+		majListeAttributs: function(attributs, attributCourant){
+			$.each(attributs, function(index, attribut){
+				var selected = (attribut.nom == attributCourant) ? "selected" : "";
+				$("#attribut").append('<option value="'+attribut.nom+'">'+attribut.nom+'</option>');
+			});	
+		},
+		/**
+		* Rempli l'outil de sélection de la valeur
+		* @param array valeurs Array de <Valeur>
+		* @param <Valeur> courante
+		*/
+		majListeValeurs: function(valeurs, valeurCourante){
+			$.each(valeurs, function(index, valeur){
+				var selected = (valeur.valeur == valeurCourante) ? "selected" : "";
+				$("#valeur").append('<option value="'+valeur.valeur+'">'+valeur.valeur+'</option>');
+			});
 		}
 	});
-
 })( jQuery );

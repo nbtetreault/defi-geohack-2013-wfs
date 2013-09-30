@@ -26,7 +26,3 @@ WFSS.prototype.getWFSParNom = function(nom){
 	}
 	return wfs;
 }
-/*
-WFSS.prototype.getListe = function(){
-	return this.items;
-}*/

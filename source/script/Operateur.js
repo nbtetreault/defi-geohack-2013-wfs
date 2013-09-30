@@ -1,5 +1,3 @@
-﻿
-function Operateur(nomWps, titre){
-	this.nomWps = nomWps;
+﻿function Operateur(titre){
 	this.titre = titre;
 }

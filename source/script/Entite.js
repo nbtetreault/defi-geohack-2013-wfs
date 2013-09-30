@@ -1,10 +1,12 @@
 ﻿function Entite(){
-	this.estDefinie = false; //L'entitée est complète
+	this.CLASS_NAME = 'Entite';
+	
 	this.WFS = null; //<WFS>
 	this.couche = null; //<Couche>
 	this.attribut = null;//<Attribut>
 	this.operateur = null;//<Operateur>
 	this.valeur = null; //<Valeur>
+	
 }
 
 /*
@@ -16,4 +18,8 @@ Entite.prototype.getCondition = function(){
 	}
 	return this.attribut + this.operateur + this.valeur;
 	
+}
+
+Entite.prototype.conditionValide = function(){
+	return (this.attribut && this.operateur && this.valeur) ? true : false;
 }

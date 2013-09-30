@@ -13,9 +13,9 @@
 		"bbox"
 	];
 
-	this.entiteSource = {};
+	this.entiteSource = new Entite();
 	this.operateurSpatial = null;
-	this.entiteReference = {};
+	this.entiteReference = new Entite();
 
 
 	//Initialisation des WFS
@@ -32,17 +32,3 @@
 	this.dialog = null;
 	this.map = null;
 }
-
-
-Defi.prototype.getWFSParNom = function (nom){
-	var WFS = '';
-	
-	//Parcourir les WFS et trouver celui qui a le bon nom
-	while(WFS == ''){
-		
-	}
-	return '';
-}
-
-
-
