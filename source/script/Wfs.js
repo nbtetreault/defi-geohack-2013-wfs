@@ -28,7 +28,10 @@ WFS.prototype.charger = function(){
 		success: function(response){
 
 			var format = new OpenLayers.Format.XML();
+			
+			response.responseText = response.responseText.removeHTMLComments();
 			xml = format.read(response.responseText);
+			
 
 			//Liste des couches
 			var xmlCouches = format.getElementsByTagNameNS(xml, "*", "FeatureType");

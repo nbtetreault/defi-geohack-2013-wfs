@@ -1,4 +1,4 @@
-function Valeurs(){
+﻿function Valeurs(){
 	this.items = []; //Array de <Valeur>
 }
 

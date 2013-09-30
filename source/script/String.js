@@ -11,3 +11,7 @@ String.prototype.rtrim = function( chars ) {
 String.prototype.trim = function( chars ) {
     return this.rtrim(chars).ltrim(chars);
 }
+
+String.prototype.removeHTMLComments = function(string){
+	return this.replace(/<!--(.*?)-->/gm, "");
+}

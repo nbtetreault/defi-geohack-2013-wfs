@@ -1,56 +1,71 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>Défi!</title>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.11/OpenLayers.js" type="text/javascript"></script>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Défi!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>Full Screen Example</title>        
+        <link rel="stylesheet" href="css/default.css" type="text/css">
+        <link rel="stylesheet" href="css/reset.css" type="text/css">
+		<link rel="stylesheet" href="css/style.css" type="text/css">
+     
+        <script src="http://openlayers.org/api/OpenLayers.js"></script>
+		<script src="script/fullScreen.js"></script>
+		 
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		
+		
+		<!-- Classes utilitaires -->
+		<script src="script/WFS.js"></script>
+		<script src="script/WFSS.js"></script>
+		<script src="script/Couche.js"></script>
+		<script src="script/Couches.js"></script>
+		<script src="script/Attribut.js"></script>
+		<script src="script/Attributs.js"></script>
+		<script src="script/Operateur.js"></script>
+		<script src="script/Valeur.js"></script>
+		<script src="script/Valeurs.js"></script>
+		<script src="script/Entite.js"></script>
+		<script src="script/DialogEntite.js"></script>
+		<script src="script/Helper.js"></script>
+		<script src="script/String.js"></script>
+	 	<script src="script/Defi.js"></script>
+		
+		<script src="script/script.js"></script>
 
+		<link  href="css/default.css" rel="stylesheet">
+		<link  href="css/reset.css" rel="stylesheet">
+		<link  href="css/style.css" rel="stylesheet">
+		<link  href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    </head>
+    <body>	<div id="map"></div>		
+		<div id="dialog_entite"></div>
+		<div id="dialog_operateur_spatial" style="display:none;">
+			<select id="select_operateur_spatial" size="15"></select><br>
+			<input type="button" value="OK" id="btn_operateur_ok">
+		</div>
+        
 
+          <div id="text">
+              <h1 id="title">Requête spatiale avec WFS</h1>
 
-<!-- Classes utilitaires -->
-<script src="script/WFS.js"></script>
-<script src="script/WFSS.js"></script>
-<script src="script/Couche.js"></script>
-<script src="script/Couches.js"></script>
-<script src="script/Attribut.js"></script>
-<script src="script/Attributs.js"></script>
-<script src="script/Operateur.js"></script>
-<script src="script/Valeur.js"></script>
-<script src="script/Valeurs.js"></script>
-<script src="script/Entite.js"></script>
-<script src="script/DialogEntite.js"></script>
-<script src="script/Helper.js"></script>
-<script src="script/String.js"></script>
-
-<script src="script/Defi.js"></script>
-<script src="script/script.js"></script>
-
-<link  href="css/style.css" rel="stylesheet">
-<link  href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
-
-
-</head>
-<body>
-<div id="main">
-<h4>Sélection des entités sources</h4>
-<input id="btn_entite_source" type="button" value="Sélectionner la couche WFS">
-<h4>Où l'entité</h4>
-<input id="btn_operateur" type="button" value="Sélectionner l'opérateur">
-<h4>Sélection des entités de référence</h4>
-<input id="btn_entite_reference" type="button" value="Sélectionner la couche WFS">
-<input id="btn_afficher_resultat" type="button" value="Afficher le résultat">
-</div>
-<div id="carte"></div>
-<div id="dialog">
-
-</div>
-<div id="form_operateur_spatial">
-<select id="select_operateur_spatial" size="15"></select>
-<input type="button" value="OK" id="btn_operateur_ok">
-</div>
-<div id="form_entite_reference"></div>
-</body>
+              <p id="shortdesc">
+                Demonstrate a map that fills the entire browser window.
+            </p>
+			<div id="docs">
+				<h4>Sélection des entités sources<span style="color:red;font-weight:bold;">*</span></h4>
+				<input id="btn_entite_source" type="button" value="Sélectionner la couche WFS">
+				<h4>Où l'entité</h4>
+				<input id="btn_operateur" type="button" value="Sélectionner l'opérateur">
+				<h4>Sélection des entités de référence</h4>
+				<input id="btn_entite_reference" type="button" value="Sélectionner la couche WFS">
+				<br>
+				<input id="btn_afficher_resultat" type="button" value="Afficher le résultat">
+			</div>
+        </div>
+	
+    </body>
 </html>

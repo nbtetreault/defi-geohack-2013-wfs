@@ -167,20 +167,29 @@
 				this.majCondition();
 			},this));
 			
-			$("#enregistrer_condition").on("click", function(){
-				alert("ajouter la condition click");
-			});
+			$("#enregistrer_condition").click($.proxy(function(){
 			
-			
-			
-			
+				if(this.conditionValide()){
+					var toto = tutu;
+				}else{
+					alert("Veuillez sélectionner les options nécessaires");
+				}
+				
+			}, this));
+
 		},
-		majCondition:function (){
+		conditionValide:function (){
 			var attribut = $("#attribut").val();
 			var operateur = $("#operateur").val();
 			var valeur = $("#valeur").val();
-			
-			if(attribut && operateur && valeur){
+			return (attribut && operateur && valeur);
+		},
+		majCondition:function (){
+
+			if(this.conditionValide()){
+				var attribut = $("#attribut").val();
+				var operateur = $("#operateur").val();
+				var valeur = $("#valeur").val();
 				$("#condition").html(attribut + operateur + valeur);
 			}else{
 				$("#condition").html('&nbsp;');
@@ -191,7 +200,6 @@
 
 			//charger les données de l'entitée
 		},
-		
 		close: function(){
 			this._super();
 			this.destroy();

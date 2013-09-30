@@ -1,9 +1,6 @@
 ﻿function Defi(){
-	this.entiteSource = {};
-	this.operateur = null;
-	this.entiteReference = {};
 	this.OPERATEURS = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like", "AND", "OR"];
-	this.OPERATEURS__ = [
+	this.OPETATEURS_SPATIAUX = [
 		"equals",
 		"disjoint",
 		"touches",
@@ -15,6 +12,11 @@
 		"dwitin",
 		"bbox"
 	];
+
+	this.entiteSource = {};
+	this.operateurSpatial = null;
+	this.entiteReference = {};
+
 
 	//Initialisation des WFS
 	this.WFSS = new WFSS();
@@ -28,6 +30,7 @@
 							"1.0.0");
 					
 	this.dialog = null;
+	this.map = null;
 }
 
 

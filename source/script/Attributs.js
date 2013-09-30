@@ -1,4 +1,4 @@
-function Attributs(){
+ï»¿function Attributs(){
 	this.items = []; //Array de <Attribut>
 }
 
@@ -23,7 +23,7 @@ Attributs.prototype.trier = function(){
 Attributs.prototype.trierValeurs = function(){
 	
 	for(var i = 0; i < this.items.length; i++){
-		this.items[i].trier();
+		this.items[i].valeursPossibles.trier();
 	}
 }
 
@@ -41,16 +41,16 @@ Attributs.prototype.getAttributParNom = function(nom){
 }
 
 /*
-* Ajoute une valeur possible à l'attribut si elle n'existe pas déjà
+* Ajoute une valeur possible Ã  l'attribut si elle n'existe pas dÃ©jÃ 
 * @param string nomAttribut Attribut pour lequel on ajoute la valeur
-* @param string valeur Valeur à ajouter
+* @param string valeur Valeur Ã  ajouter
 */
 Attributs.prototype.ajouterValeurPossible = function(nomAttribut, valeur){
 
 	//Trouver l'attribut
 	var attribut = this.getAttributParNom(nomAttribut);
 	
-	//La valeur n'existe pas déjà
+	//La valeur n'existe pas dÃ©jÃ 
 	if(attribut && !attribut.valeursPossibles.getValeurParValeur(valeur)){
 		
 		//Ajouter la valeur
