@@ -13,6 +13,7 @@ function init(){
 		$("#dialog_entite").dialogEntite({
 			title:"Entité source",
 			entite:defi.entiteSource,
+			nomEntite:'source',
 			width:800,
 			modal:true
 		});	
@@ -47,6 +48,7 @@ function init(){
 		$("#dialog_entite").dialogEntite({
 			title:"Entité référence",
 			entite:defi.entiteReference,
+			nomEntite:'reference',
 			width:800,
 			modal:true
 		});

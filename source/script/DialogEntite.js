@@ -8,7 +8,8 @@
 	$.widget("defi.dialogEntite", $.ui.dialog,{
         
         options: {
-            entite: {}
+            entite: {},
+			nomEntite:''
         },
 
 		_create: function(){
@@ -46,20 +47,18 @@
 			//On a déjà définie l'entitée
 			if(this.entiteTempo.getCondition()){
 				
-				//Remplir la liste des couches
-				this.majListeCouches();
+				//Remplir la liste des couches et sélectionner la couche courante
+				this.majListeCouches(this.entiteTempo.WFS.couches.items, this.entiteTempo.couche);
 				
-				//Remplir la liste des attributs de couche
-				//stocké pour ne pas avoir à réinterroger le WFS
+				//Remplir la liste des attributs et sélectionner l'attribut courant
+				this.majListeAttributs(this.entiteTempo.couche.attributs.items, this.entiteTempo.attribut);
 			
-			
-				//Remplir la liste des valeurs
-				//stocké pour ne pas avoir à réinterroger le WFS
+				//Remplir la liste des valeurs et sélectionner la liste courante
+				this.majListeValeurs(this.entiteTempo.attribut.valeursPossibles.items, this.entiteTempo.valeur);
 				
 			}
 		
 			$("#WFS").change($.proxy(function(){
-				
 				
 				var valeur = $("#WFS option:selected").val();
 				
@@ -196,6 +195,13 @@
 			
 				if(this.entiteTempo.conditionValide()){
 
+					//Patch pour transférer la référence sur l'objet, en passant 
+					//par this.options.entite ça ne semble pas fonctionner
+					if(this.options.nomEntite == "source"){
+						defi.entiteSource = this.entiteTempo;
+					}else{
+						defi.entiteReference = this.entiteTempo;
+					}
 					this.options.entite = this.entiteTempo;
 					this.close();
 				}else{
@@ -238,7 +244,7 @@
 		majListeWFS: function(WFSS, WFSCourant){
 			
 			$.each(defi.WFSS.items, function(index, WFS){
-				var selected = (WFS.nom == WFSCourant) ? "selected" : "";
+				var selected = (WFS.nom == WFSCourant.nom) ? "selected" : "";
 				$("#WFS").append('<option value="'+WFS.nom.HTMLEntities()+'">'+WFS.nom.HTMLEntities()+'</option>');
 			});
 		},
@@ -250,7 +256,7 @@
 		majListeCouches: function (couches, coucheCourante){
 		
 			$.each(couches, function(index, couche){
-				var selected = (couche.nom == coucheCourante) ? "selected" : "";
+				var selected = (couche.nom == coucheCourante.nom) ? "selected" : "";
 				$("#couche").append('<option value="'+couche.nom.HTMLEntities()+'" "'+selected+'">'+couche.nom.HTMLEntities()+'</option>');
 			});
 		},
@@ -261,7 +267,7 @@
 		*/
 		majListeAttributs: function(attributs, attributCourant){
 			$.each(attributs, function(index, attribut){
-				var selected = (attribut.nom == attributCourant) ? "selected" : "";
+				var selected = (attribut.nom == attributCourant.nom) ? "selected" : "";
 				$("#attribut").append('<option value="'+attribut.nom.HTMLEntities()+'">'+attribut.nom.HTMLEntities()+'</option>');
 			});	
 		},
@@ -272,7 +278,7 @@
 		*/
 		majListeValeurs: function(valeurs, valeurCourante){
 			$.each(valeurs, function(index, valeur){
-				var selected = (valeur.valeur == valeurCourante) ? "selected" : "";
+				var selected = (valeur.valeur == valeurCourante.valeurs) ? "selected" : "";
 				$("#valeur").append('<option value="'+valeur.valeur.HTMLEntities()+'">'+valeur.valeur.HTMLEntities()+'</option>');
 			});
 		}
