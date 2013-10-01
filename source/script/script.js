@@ -1,4 +1,5 @@
 ﻿var defi = new Defi();
+var drawControls;
 
 $(document).ready(function(){
 	init();
@@ -34,7 +35,7 @@ function init(){
 		var operateur = $("#select_operateur_spatial").val();
 		if(operateur){
 			defi.operateurSpatial = operateur;
-			$("#dialog_operateur_spatial").dialog("close");
+			$("#dialog_operateur_spatial").dialog("destroy");
 		}else{
 			alert("Veuillez sélectionner un opérateur");
 		}
@@ -51,7 +52,18 @@ function init(){
 		});
 	});
 	
+}
 
+function toggleControl(element) {
+	for(key in drawControls) {
+		var control = drawControls[key];
+		
+		if(element.value == key && element.checked) {
+			control.activate();
+		} else {
+			control.deactivate();
+		}
+	}
 }
 
 function init_map(){
@@ -68,10 +80,35 @@ function init_map(){
 			}),
 			new OpenLayers.Control.PanZoom(),
 			new OpenLayers.Control.Attribution()
-		],
-		center: [-7968226,6439648],
-		zoom: 5
+		]/*,
+		center: new OpenLayers.LonLat(-73, 46).transform(
+				new OpenLayers.Projection("EPSG:4326"),
+				defi.map.getProjectionObject()
+			),
+		zoom: 7*/
 	});
+	
+	//setCenter
+	defi.map.setCenter(
+			new OpenLayers.LonLat(-73, 46).transform(
+				new OpenLayers.Projection("EPSG:4326"),
+				defi.map.getProjectionObject()
+			), 7
+		);
 
+	//Ajout de overlays
+	//vector layer pour polygone
+	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
+	defi.map.addLayer(polygonLayer);
+	
+	//Ajout des controles
 	defi.map.addControl(new OpenLayers.Control.LayerSwitcher());
+	//pour dessiner des features
+	drawControls = {
+		drawPolygon: new OpenLayers.Control.DrawFeature(polygonLayer,
+			OpenLayers.Handler.Polygon)
+	};
+	for(var key in drawControls) {
+		defi.map.addControl(drawControls[key]);
+	}
 }
