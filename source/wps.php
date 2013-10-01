@@ -20,14 +20,14 @@ function SendRequest( $url, $method = 'GET', $data = array(), $headers = array('
 
 if( !empty($_GET) )
 {
-	$urlService = $_GET['urlService'];//"http://10.102.27.181:8080/geoserver/TestWfsPost";
-	$url = $_GET['url'];//"http://10.102.27.181:8080/geoserver/ows";
+	$urlService = $_GET['urlService'];//"http://localhost:8080/geoserver/TestWfsPost";
+	$url = $_GET['url'];//"http://localhost:8080/geoserver/ows";
 	$body = $_GET['body'];//'';
 }
 else//c'est un post
 {
-	$urlService = "http://10.102.27.181:8080/geoserver/TestWfsPost";
-	$url = "http://10.102.27.181:8080/geoserver/ows";
+	$urlService = "http://localhost:8080/geoserver/TestWfsPost";
+	$url = "http://localhost:8080/geoserver/ows";
 	$body = file_get_contents('php://input');
 }
 
