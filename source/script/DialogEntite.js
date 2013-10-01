@@ -168,7 +168,7 @@
 
 			$("#operateur").change($.proxy(function(){
 
-				var operateur = $("operateur option:selected").val();
+				var operateur = $("#operateur option:selected").val();
 				if(operateur){
 					operateur = new Operateur(operateur);
 					this.entiteTempo.operateur = operateur;
@@ -181,7 +181,7 @@
 	
 			$("#valeur").change($.proxy(function(){
 
-				var valeur = $("valeur option:selected").val();
+				var valeur = $("#valeur option:selected").val();
 				if(valeur){
 					valeur = new Valeur(valeur);
 					this.entiteTempo.valeur = valeur;
@@ -239,7 +239,7 @@
 			
 			$.each(defi.WFSS.items, function(index, WFS){
 				var selected = (WFS.nom == WFSCourant) ? "selected" : "";
-				$("#WFS").append('<option value="'+WFS.nom+'">'+WFS.nom+'</option>');
+				$("#WFS").append('<option value="'+WFS.nom.HTMLEntities()+'">'+WFS.nom.HTMLEntities()+'</option>');
 			});
 		},
 		/**
@@ -251,7 +251,7 @@
 		
 			$.each(couches, function(index, couche){
 				var selected = (couche.nom == coucheCourante) ? "selected" : "";
-				$("#couche").append('<option value="'+couche.nom+'" "'+selected+'">'+couche.nom+'</option>');
+				$("#couche").append('<option value="'+couche.nom.HTMLEntities()+'" "'+selected+'">'+couche.nom.HTMLEntities()+'</option>');
 			});
 		},
 		/**
@@ -262,7 +262,7 @@
 		majListeAttributs: function(attributs, attributCourant){
 			$.each(attributs, function(index, attribut){
 				var selected = (attribut.nom == attributCourant) ? "selected" : "";
-				$("#attribut").append('<option value="'+attribut.nom+'">'+attribut.nom+'</option>');
+				$("#attribut").append('<option value="'+attribut.nom.HTMLEntities()+'">'+attribut.nom.HTMLEntities()+'</option>');
 			});	
 		},
 		/**
@@ -273,7 +273,7 @@
 		majListeValeurs: function(valeurs, valeurCourante){
 			$.each(valeurs, function(index, valeur){
 				var selected = (valeur.valeur == valeurCourante) ? "selected" : "";
-				$("#valeur").append('<option value="'+valeur.valeur+'">'+valeur.valeur+'</option>');
+				$("#valeur").append('<option value="'+valeur.valeur.HTMLEntities()+'">'+valeur.valeur.HTMLEntities()+'</option>');
 			});
 		}
 	});
