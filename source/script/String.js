@@ -136,3 +136,10 @@ String.prototype.HTMLEntities = function(){
 	texte = texte.replace(/ÿ/g,'&yuml;'); // 255 FF
 	return texte;
 }
+
+  String.prototype.encodeHTML = function () {
+    return this.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;');
+  };

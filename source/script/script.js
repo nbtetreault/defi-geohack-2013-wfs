@@ -56,8 +56,10 @@ function init(){
 	
 	$("#btn_afficher_resultat").on("click", function(){
 		//Vérifier que tout est OK
+		lancer_handler();
 		if(defi.champsRemplis()){
 		
+			
 		}else{
 			alert("Veuillez remplir les formulaires");
 		}
@@ -90,12 +92,7 @@ function init_map(){
 			}),
 			new OpenLayers.Control.PanZoom(),
 			new OpenLayers.Control.Attribution()
-		]/*,
-		center: new OpenLayers.LonLat(-73, 46).transform(
-				new OpenLayers.Projection("EPSG:4326"),
-				defi.map.getProjectionObject()
-			),
-		zoom: 7*/
+		]
 	});
 	
 	//setCenter
@@ -109,13 +106,31 @@ function init_map(){
 	//Ajout de overlays
 	//vector layer pour polygone
 	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
-	defi.map.addLayer(polygonLayer);
+	
+	
+	var caserne = new OpenLayers.Layer.WMS( "Caserne",
+                    "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
+	var stations = new OpenLayers.Layer.WMS( "Stations",
+                    "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
+	var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+	var lineLayer = new OpenLayers.Layer.Vector("Line Layer");
+	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+					
+					
+	defi.map.addLayers([caserne, stations, polygonLayer]);
+	
+	
 	
 	//Ajout des controles
 	defi.map.addControl(new OpenLayers.Control.LayerSwitcher());
-	//pour dessiner des features
-	drawControls = {
-		drawPolygon: new OpenLayers.Control.DrawFeature(polygonLayer,
+		//Controle pour dessiner des features
+	drawControls = 
+	{
+		point: new OpenLayers.Control.DrawFeature(pointLayer,
+			OpenLayers.Handler.Point),
+		line: new OpenLayers.Control.DrawFeature(lineLayer,
+			OpenLayers.Handler.Path),
+		polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
 			OpenLayers.Handler.Polygon)
 	};
 	for(var key in drawControls) {
