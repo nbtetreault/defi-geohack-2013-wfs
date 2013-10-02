@@ -1,5 +1,5 @@
 ﻿function Defi(){
-	this.OPERATEURS = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like", "AND", "OR"];
+	this.OPERATEURS = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like"];
 	this.OPETATEURS_SPATIAUX = [
 		"equals",
 		"disjoint",
