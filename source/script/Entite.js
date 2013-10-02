@@ -21,5 +21,7 @@ Entite.prototype.getCondition = function(){
 }
 
 Entite.prototype.conditionValide = function(){
-	return (this.attribut && this.operateur && this.valeur) ? true : false;
+
+
+	return (this.attribut && this.operateur && this.valeur) || (!this.attribut && !this.operateur && !this.valeur && this.couche && this.WFS) ? true : false;
 }
