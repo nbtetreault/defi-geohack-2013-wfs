@@ -79,9 +79,11 @@ function toggleControl(element) {
 }
 
 function init_map(){
-	defi.map = new OpenLayers.Map({
-		div: "map",
-		//layers: [new OpenLayers.Layer.OSM("OpenStreetMap")],
+	defi.map = new OpenLayers.Map("map",{
+		projection: new OpenLayers.Projection("EPSG:3857"),
+		units: "m",
+		maxResolution: 156543.0339,
+		layers: [new OpenLayers.Layer.OSM("OpenStreetMap")],
 		controls: [
 			new OpenLayers.Control.Navigation({
 				dragPanOptions: {
@@ -94,18 +96,17 @@ function init_map(){
 		]
 	});
 	
-	
-	var osm = new OpenLayers.Layer.OSM("Simple OSM Map");
 	//Ajout de overlays	
 	var caserne = new OpenLayers.Layer.WMS( "Caserne", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: true} );
-	var stations = new OpenLayers.Layer.WMS( "Stations", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
-	
+	var stations = new OpenLayers.Layer.WMS( "Stations", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: true} );
+
 	//vector layer pour dessin
 	/*var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
 	var lineLayer = new OpenLayers.Layer.Vector("Line Layer");*/
 	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
 			
-	defi.map.addLayers([osm, polygonLayer, caserne, stations]);
+	defi.map.addLayers([polygonLayer, caserne, stations]);
+	//defi.map.addLayers([imagery]);
 	
 	//setCenter
 	defi.map.setCenter(
