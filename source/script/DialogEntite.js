@@ -2,6 +2,7 @@
 * Inspiré de https://github.com/jquery-boilerplate/boilerplate/
 
 //TODO Mettre un "veuillez patienter" quand on fait du ajax
+
 */
 (function( $, undefined ) {
 
@@ -36,27 +37,27 @@
 				);	  
 			
 			
-			var WFSCourant = (this.entiteTempo.attribut) ? this.entiteTempo.attribut.nom : '';
-			this.majListeWFS(defi.WFSS.items, '');
-				
-			//Remplir la liste des opérateurs
-			$.each(defi.OPERATEURS, function(index, valeur){
-				$("#operateur").append('<option value="'+valeur+'">'+valeur+'</option>');
-			});
+			var nomWFSCourant = (this.entiteTempo.getCondition()) ? this.entiteTempo.WFS.nom : '';
+			this.majListeWFS(defi.WFSS.items, nomWFSCourant);
+
+			var operateurCourant = '';
 			
 			//On a déjà définie l'entitée
 			if(this.entiteTempo.getCondition()){
 				
 				//Remplir la liste des couches et sélectionner la couche courante
-				this.majListeCouches(this.entiteTempo.WFS.couches.items, this.entiteTempo.couche);
+				this.majListeCouches(this.entiteTempo.WFS.couches.items, this.entiteTempo.couche.nom);
 				
 				//Remplir la liste des attributs et sélectionner l'attribut courant
-				this.majListeAttributs(this.entiteTempo.couche.attributs.items, this.entiteTempo.attribut);
+				this.majListeAttributs(this.entiteTempo.couche.attributs.items, this.entiteTempo.attribut.nom);
 			
 				//Remplir la liste des valeurs et sélectionner la liste courante
-				this.majListeValeurs(this.entiteTempo.attribut.valeursPossibles.items, this.entiteTempo.valeur);
+				this.majListeValeurs(this.entiteTempo.attribut.valeursPossibles.items, this.entiteTempo.valeur.valeur);
 				
+				operateurCourant = this.entiteTempo.operateur.titre;
 			}
+			
+			this.majListeOperateurs(defi.OPERATEURS, operateurCourant);
 		
 			$("#WFS").change($.proxy(function(){
 				
@@ -81,9 +82,6 @@
 						
 						//Au moins une couche pour le WFS
 						if(WFS.couches.length() > 0){
-						
-							//Activer le contrôle de sélection des couches
-							$("#couche").removeAttr("disabled");
 							
 							this.majListeCouches(WFS.couches.items, '');
 						}else{
@@ -129,7 +127,7 @@
 						$(attribut).html('');
 						
 						//Maj de la liste des attributs de la couche
-						this.majListeAttributs(couche.attributs.items)
+						this.majListeAttributs(couche.attributs.items, '')
 						
 						
 					}else{
@@ -241,45 +239,56 @@
 		viderListeValeurs: function(){
 			$("#valeur").html("");
 		},
-		majListeWFS: function(WFSS, WFSCourant){
+		majListeWFS: function(WFSS, nomWFSCourant){
 			
 			$.each(defi.WFSS.items, function(index, WFS){
-				var selected = (WFS.nom == WFSCourant.nom) ? "selected" : "";
-				$("#WFS").append('<option value="'+WFS.nom.HTMLEntities()+'">'+WFS.nom.HTMLEntities()+'</option>');
+				var selected = (WFS.nom == nomWFSCourant) ? "selected" : "";
+				$("#WFS").append('<option value="'+WFS.nom.HTMLEntities()+'" '+selected+'>'+WFS.nom.HTMLEntities()+'</option>');
 			});
 		},
 		/**
 		* Rempli l'outil de sélection de la couche
 		* @param array couches Array de <Couche>
-		* @param <Couche> courante
+		* @param string Valeur courante
 		*/
 		majListeCouches: function (couches, coucheCourante){
 		
+			//Activer le contrôle de sélection des couches
+			$("#couche").removeAttr("disabled");
+		
 			$.each(couches, function(index, couche){
-				var selected = (couche.nom == coucheCourante.nom) ? "selected" : "";
-				$("#couche").append('<option value="'+couche.nom.HTMLEntities()+'" "'+selected+'">'+couche.nom.HTMLEntities()+'</option>');
+				var selected = (couche.nom == coucheCourante) ? "selected" : "";
+				$("#couche").append('<option value="'+couche.nom.HTMLEntities()+'" '+selected+'>'+couche.nom.HTMLEntities()+'</option>');
 			});
 		},
 		/**
 		* Rempli l'outil de sélection de l'attribut
 		* @param array attributs Array de <Attribut>
-		* @param <Attribut> courant
+		* @param string Valeur courante courant
 		*/
 		majListeAttributs: function(attributs, attributCourant){
 			$.each(attributs, function(index, attribut){
-				var selected = (attribut.nom == attributCourant.nom) ? "selected" : "";
-				$("#attribut").append('<option value="'+attribut.nom.HTMLEntities()+'">'+attribut.nom.HTMLEntities()+'</option>');
+				var selected = (attribut.nom == attributCourant) ? "selected" : "";
+				$("#attribut").append('<option value="'+attribut.nom.HTMLEntities()+'" '+selected+'>'+attribut.nom.HTMLEntities()+'</option>');
 			});	
+		},
+		majListeOperateurs: function(operateurs, operateurCourant){
+			//Remplir la liste des opérateurs
+			$.each(operateurs, function(index, operateur){
+				var selected = operateurCourant == operateur ? "selected" : "";
+				$("#operateur").append('<option value="'+operateur+'" '+selected+'>'+operateur+'</option>');
+			});
+			
 		},
 		/**
 		* Rempli l'outil de sélection de la valeur
 		* @param array valeurs Array de <Valeur>
-		* @param <Valeur> courante
+		* @param string Valeur courante
 		*/
 		majListeValeurs: function(valeurs, valeurCourante){
 			$.each(valeurs, function(index, valeur){
-				var selected = (valeur.valeur == valeurCourante.valeurs) ? "selected" : "";
-				$("#valeur").append('<option value="'+valeur.valeur.HTMLEntities()+'">'+valeur.valeur.HTMLEntities()+'</option>');
+				var selected = (valeur.valeur == valeurCourante) ? "selected" : "";
+				$("#valeur").append('<option value="'+valeur.valeur.HTMLEntities()+'"  '+selected+'>'+valeur.valeur.HTMLEntities()+'</option>');
 			});
 		}
 	});

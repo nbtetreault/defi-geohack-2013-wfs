@@ -32,3 +32,12 @@
 	this.dialog = null;
 	this.map = null;
 }
+
+Defi.prototype.champsRemplis = function(){
+	var sourceValide = this.entiteSource.getCondition();
+	var operateurSpatialValide = this.operateurSpatial;
+	//todo vérifier les polygones qu'on aurait pu dessiner
+	var referenceValide = this.entiteReference.getCondition || false;
+	
+	return sourceValide && operateurSpatialValide && referenceValide;
+}

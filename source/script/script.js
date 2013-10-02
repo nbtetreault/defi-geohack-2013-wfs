@@ -25,8 +25,8 @@ function init(){
 			"modal":true
 		});
 	
-		
-		$.each(defi.OPETATEURS_SPATIAUX, function(index, valeur){
+		var operateursSpatiaux = defi.OPETATEURS_SPATIAUX.sort();
+		$.each(operateursSpatiaux, function(index, valeur){
 			$("#select_operateur_spatial").append('<option value="'+valeur+'">'+valeur+'</option>');
 		});
 		
@@ -54,6 +54,14 @@ function init(){
 		});
 	});
 	
+	$("#btn_afficher_resultat").on("click", function(){
+		//Vérifier que tout est OK
+		if(defi.champsRemplis()){
+		
+		}else{
+			alert("Veuillez remplir les formulaires");
+		}
+	});
 }
 
 function toggleControl(element) {
