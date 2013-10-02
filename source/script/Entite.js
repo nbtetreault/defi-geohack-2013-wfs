@@ -6,6 +6,7 @@
 	this.attribut = null;//<Attribut>
 	this.operateur = null;//<Operateur>
 	this.valeur = null; //<Valeur>
+	this.buffer='';
 	
 }
 

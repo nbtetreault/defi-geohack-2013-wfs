@@ -33,6 +33,8 @@
 						  + '</td></tr></table>'
 						  + '<b>Condition</b><br>'
 						  + '<p id="condition">&nbsp;</p>'
+						  + '<b>Buffer</b> (mètres)'
+						  + '<input id="txtBuffer" type="text">'
 						  + '<input type="button" value="Enregistrer la condition" id="enregistrer_condition">'
 				);	  
 			
@@ -187,6 +189,12 @@
 				}
 
 				this.majCondition();
+			},this));
+			
+			$("#txtBuffer").change($.proxy(function(){
+
+				this.entiteTempo.buffer = $("#txtBuffer").val();
+				
 			},this));
 			
 			$("#enregistrer_condition").click($.proxy(function(){
