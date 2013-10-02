@@ -1,5 +1,6 @@
 <?php
 header('Content-type: application/json; charset=utf-8');
+//header('Content-type: application/json');
 
 function SendRequest( $url, $method = 'GET', $data = array(), $headers = array('Content-type: application/x-www-form-urlencoded') )
 {

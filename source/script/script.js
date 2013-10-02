@@ -97,8 +97,8 @@ function init_map(){
 	});
 	
 	//Ajout de overlays	
-	var caserne = new OpenLayers.Layer.WMS( "Caserne", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: true} );
-	var stations = new OpenLayers.Layer.WMS( "Stations", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: true} );
+	var caserne = new OpenLayers.Layer.WMS( "Caserne", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
+	var stations = new OpenLayers.Layer.WMS( "Stations", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
 
 	//vector layer pour dessin
 	/*var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
