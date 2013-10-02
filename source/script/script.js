@@ -106,7 +106,6 @@ function init_map(){
 	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
 			
 	defi.map.addLayers([polygonLayer, caserne, stations]);
-	//defi.map.addLayers([imagery]);
 	
 	//setCenter
 	defi.map.setCenter(
