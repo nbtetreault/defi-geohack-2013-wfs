@@ -17,6 +17,7 @@ Couche.prototype.urlGetFeatureType = function(){
 * Construit l'url à appeler pour faire un GetFeature
 */
 Couche.prototype.urlGetFeature = function(){
+
 	return this.WFS.url + "&VERSION=" + this.WFS.version + "&SERVICE=WFS&REQUEST=GetFeature&TYPENAME=" + this.nom;
 }
 

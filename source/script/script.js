@@ -61,7 +61,7 @@ function init(){
 		
 			
 		}else{
-			alert("Veuillez remplir les formulaires");
+			//alert("Veuillez remplir les formulaires");
 		}
 	});
 }
