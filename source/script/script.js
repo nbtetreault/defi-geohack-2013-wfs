@@ -1,4 +1,4 @@
-﻿var defi = new Defi();
+var defi = new Defi();
 var drawControls;
 
 $(document).ready(function(){
@@ -81,9 +81,7 @@ function toggleControl(element) {
 function init_map(){
 	defi.map = new OpenLayers.Map({
 		div: "map",
-		layers: [
-			new OpenLayers.Layer.OSM("OpenStreetMap")
-		],
+		//layers: [new OpenLayers.Layer.OSM("OpenStreetMap")],
 		controls: [
 			new OpenLayers.Control.Navigation({
 				dragPanOptions: {
@@ -91,9 +89,23 @@ function init_map(){
 				}
 			}),
 			new OpenLayers.Control.PanZoom(),
-			new OpenLayers.Control.Attribution()
+			new OpenLayers.Control.Attribution(),
+			new OpenLayers.Control.LayerSwitcher()
 		]
 	});
+	
+	
+	var osm = new OpenLayers.Layer.OSM("Simple OSM Map");
+	//Ajout de overlays	
+	var caserne = new OpenLayers.Layer.WMS( "Caserne", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: true} );
+	var stations = new OpenLayers.Layer.WMS( "Stations", "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
+	
+	//vector layer pour dessin
+	/*var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+	var lineLayer = new OpenLayers.Layer.Vector("Line Layer");*/
+	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
+			
+	defi.map.addLayers([osm, polygonLayer, caserne, stations]);
 	
 	//setCenter
 	defi.map.setCenter(
@@ -102,34 +114,16 @@ function init_map(){
 				defi.map.getProjectionObject()
 			), 7
 		);
-
-	//Ajout de overlays
-	//vector layer pour polygone
-	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer",{isBaseLayer: false, visibility: true});
-	
-	
-	var caserne = new OpenLayers.Layer.WMS( "Caserne",
-                    "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'caserne',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
-	var stations = new OpenLayers.Layer.WMS( "Stations",
-                    "http://geoegl.msp.gouv.qc.ca/cgi-wms/gouvouvertqc?", {layers: 'adn_station_max_public_v',transparent: "true",format: "image/png"},{isBaseLayer: false, visibility: false} );
-	var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
-	var lineLayer = new OpenLayers.Layer.Vector("Line Layer");
-	var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
-					
-					
-	defi.map.addLayers([caserne, stations, polygonLayer]);
-	
-	
 	
 	//Ajout des controles
-	defi.map.addControl(new OpenLayers.Control.LayerSwitcher());
-		//Controle pour dessiner des features
+	//defi.map.addControl(new OpenLayers.Control.LayerSwitcher());
+	//Controle pour dessiner des features
 	drawControls = 
 	{
-		point: new OpenLayers.Control.DrawFeature(pointLayer,
+		/*point: new OpenLayers.Control.DrawFeature(pointLayer,
 			OpenLayers.Handler.Point),
 		line: new OpenLayers.Control.DrawFeature(lineLayer,
-			OpenLayers.Handler.Path),
+			OpenLayers.Handler.Path),*/
 		polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
 			OpenLayers.Handler.Polygon)
 	};

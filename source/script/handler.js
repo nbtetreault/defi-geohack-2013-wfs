@@ -1,3 +1,4 @@
+var selectedFeature, infoControls;
 function lancer_handler(){
 	var map = defi.map;
 	
@@ -36,6 +37,34 @@ function lancer_handler(){
 	});
 		
 }
+
+function onFeatureSelect(event) {
+ var feature = event.feature;
+	var strAttributes = '';
+   for(var key in feature.data) {
+		strAttributes += key+': '+ feature.data[key] + '<br/>';
+	}
+	popup = new OpenLayers.Popup.FramedCloud("Description", 
+											 feature.geometry.getBounds().getCenterLonLat(),
+											 null,
+											 strAttributes,
+											 null, true
+											 ,onFeatureUnselect
+											 );
+											 
+	feature.popup = popup;
+    defi.map.addPopup(popup);
+    // GLOBAL variable, in case popup is destroyed by clicking CLOSE box
+    lastfeature = feature;
+}
+function onFeatureUnselect(event) {
+   var feature = lastfeature;  
+    if(feature.popup) {
+        defi.map.removePopup(feature.popup);
+        feature.popup.destroy();
+        delete feature.popup;
+    }
+} 
 function handler(request) 
 {
 
@@ -58,6 +87,8 @@ function handler(request)
 		{styleMap: new OpenLayers.StyleMap({/*'default': defaultStyle, */'select': selectStyle})}
 	); 
 	
+	//var selectStop = new OpenLayers.Control.SelectFeature(layerKML,{onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
+
 	//zoom to extend 
 	vector_layer.events.on(
 		{
@@ -67,19 +98,36 @@ function handler(request)
 					//Assure qu'on ne soit pas trop zoomé
 					if(map.getZoom() > 15) map.zoomTo(15);
 				},
+				"featureselected": onFeatureSelect,
+				"featureunselected": onFeatureUnselect
+			/*
 			'featureselected': function(feature) {
                    //document.getElementById('divText').innerHTML = this.selectedFeatures.length;
 				   var strAttributes = '';
 				   for(var key in feature.feature.data) {
 						strAttributes += key+': '+ feature.feature.data[key] + '<br/>';
 					}
-					document.getElementById('divText').innerHTML = strAttributes;
+					selectedFeature = feature;
+					popup = new OpenLayers.Popup.FramedCloud("Description", 
+											 feature.feature.geometry.getBounds().getCenterLonLat(),
+											 null,
+											 strAttributes,
+											 null, true
+											 //, onPopupClose
+											 );
+					feature.popup = popup;
+					map.addPopup(popup);
+					//document.getElementById('divText').innerHTML = strAttributes;
                 },
 			'featureunselected': function(feature) {
-                    document.getElementById('divText').innerHTML = '';
-                }
+                    //document.getElementById('divText').innerHTML = '';
+					map.removePopup(feature.popup);
+					feature.popup.destroy();
+					feature.popup = null;
+                }*/
 		});	
 	//Controle qui Interroge le vector layer
+	//var selectStop = new OpenLayers.Control.SelectFeature(layerKML,{onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
 	infoControls = 
 	{
 			select: new OpenLayers.Control.SelectFeature(
@@ -90,10 +138,11 @@ function handler(request)
 					toggleKey: "ctrlKey" // ctrl key removes from selection
 					//,multipleKey: "shiftKey", // shift key adds to selection
 					,box: false //Sélection en dessinant une boite
+					,onSelect: onFeatureSelect, onUnselect: onFeatureUnselect
 				}
 			)
     };
-	
+	// selectControl = new OpenLayers.Control.SelectFeature(polygonLayer, {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
 	for(var key in infoControls) {
 		map.addControl(infoControls[key]);
     }
