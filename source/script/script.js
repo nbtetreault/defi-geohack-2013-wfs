@@ -25,7 +25,7 @@ function init(){
 			"modal":true
 		});
 	
-		var operateursSpatiaux = defi.OPETATEURS_SPATIAUX.sort();
+		var operateursSpatiaux = defi.OPERATEURS_SPATIAUX.sort();
 		$.each(operateursSpatiaux, function(index, valeur){
 			$("#select_operateur_spatial").append('<option value="'+valeur+'">'+valeur+'</option>');
 		});

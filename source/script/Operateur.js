@@ -1,5 +1,6 @@
 ﻿function Operateur(titre){
 	this.titre = titre;
+	
 }
 
 Operateur.prototype.getEquivalentOpenlayers=function(){
@@ -34,3 +35,36 @@ Operateur.prototype.getEquivalentOpenlayers=function(){
 	}
 	return retour;
 }
+
+var aszOperateursDescriptifs = new Array();
+var aszOperateursSpatiaux = new Array();
+var aszOperateursLogiques = new Array();
+
+//Ces arrays contiennent ce qui existe dans la norme
+//La liste des opérateurs supportés provient d"un getCapabilities
+
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsEqualTo"] = "=";
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsNotEqualTo"] = "<>";
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsLessThan"] = "<";
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsGreaterThan"] = ">";
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsLessThanOrEqualTo"] = "<=";
+aszOperateursDescriptifs["Simple_Comparisons"]["PropertyIsGreaterThanOrEqualTo"] = ">=";
+aszOperateursDescriptifs["Like"] = "PropertyIsLike";
+aszOperateursDescriptifs["Between"] = "PropertyIsBetween";
+
+//Logique
+aszOperateursLogiques["And"] = "Et";
+aszOperateursLogiques["Or"] = "Ou";
+aszOperateursLogiques["Not"] = "n'est pas";
+
+//Spatiaux
+aszOperateursSpatiaux["Equals"] = "a la même géométrie que";
+aszOperateursSpatiaux["Disjoint"] = "n'a aucune géométrieu commune";
+aszOperateursSpatiaux["Touches"] = "touche à";
+aszOperateursSpatiaux["Within"] = "est totalement à l'intérieur de ";
+aszOperateursSpatiaux["Overlaps"] = "se superpose";
+aszOperateursSpatiaux["Crosses"] = "crosses";
+aszOperateursSpatiaux["Intersect"] = "intersecte ";
+aszOperateursSpatiaux["Contains"] = "contient totalement";
+aszOperateursSpatiaux["DWithin"] = "est à une distance de";
+aszOperateursSpatiaux["BBOX"] = "est contenu dans";

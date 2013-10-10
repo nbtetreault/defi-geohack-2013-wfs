@@ -1,6 +1,6 @@
 ﻿function Defi(){
 	this.OPERATEURS = ["=", "!=", "<=", ">=", "<", ">", "Between", "Like"];
-	this.OPETATEURS_SPATIAUX = [
+	this.OPERATEURS_SPATIAUX = [
 		"equals",
 		"disjoint",
 		"touches",
@@ -9,7 +9,7 @@
 		"crosses",
 		"intersect",
 		"contains",
-		"dwitin",
+		"dwithin",
 		"bbox"
 	];
 

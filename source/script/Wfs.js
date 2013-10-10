@@ -61,6 +61,20 @@ WFS.prototype.charger = function(){
 				
 				this.ajouterCouche(name, title, srs, this);
 			}
+			//Liste des opérateurs
+			var xmlOp = format.getElementsByTagNameNS(xml, "*", "Spatial_Operators");
+			for(var i=0; i< xmlOp.length; i++){
+				
+				var op = xmlOp[i].children;
+				var name = '';
+				for(var ii=0; ii < op.length; ii++){
+					var node = op[ii];
+					//alert(node.nodeName);
+					
+				}
+
+			}
+			
 		},
 		failure: function(){ alert('ca a pas marché');},
 		scope:this //Nécessaire pour avoir accès à "this" dans le gestionnaire d'événement
