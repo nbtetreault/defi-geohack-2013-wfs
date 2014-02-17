@@ -3,7 +3,7 @@ header('Content-type: application/json; charset=utf-8');
 
 function SendRequest( $url, $method = 'GET', $data = array(), $headers = array('Content-type: application/x-www-form-urlencoded') )
 {
-
+	$url = filter_var($url, FILTER_SANITIZE_URL);
 	$context = stream_context_create(array
 	(
 		'http' => array(
